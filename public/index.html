@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Control Center</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+  <h1>Home Control Center</h1>
+
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button class="tab-button active" data-tab="shelly-control">Shelly Control</button>
+    <button class="tab-button" data-tab="video-surveillance">Video Surveillance</button>
+    <button class="tab-button" data-tab="settings-tab">Settings</button>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+    <!-- Shelly Control Tab -->
+    <div id="shelly-control" class="tab-pane active">
+      <section id="electricity-prices">
+        <h2>Electricity Prices</h2>
+        <label>
+          Chart Time Frame:
+          <select id="chartTimeFrame">
+            <option value="15min">15 Minutes</option>
+            <option value="1hour">1 Hour</option>
+          </select>
+        </label>
+        <canvas id="priceChart" width="800" height="400"></canvas>
+      </section>
+
+      <section id="shelly-devices">
+        <h2>Shelly Devices</h2>
+        <div style="margin-bottom: 10px;">
+          <button onclick="refreshAllUI()" style="padding: 5px 10px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">Refresh UI</button>
+          <span style="margin-left: 10px; font-size: 0.9em; color: #666;">Last updated: <span id="lastUpdateTime">-</span></span>
+        </div>
+        <!-- Shelly device containers are generated dynamically by the frontend modules using /api/settings -->
+        <div id="shelly-devices-root"></div>
+      </section>
+    </div>
+
+    <!-- Video Surveillance Tab -->
+    <div id="video-surveillance" class="tab-pane">
+      <section id="cameras">
+        <div class="camera-container" data-id="100">
+          <h3>Etupiha</h3>
+          <div class="camera-stream">
+            <video id="cameraVideo100" autoplay playsinline muted controls></video>
+          </div>
+          <div class="camera-controls">
+            <button type="button" onclick="toggleCamera('100')">Toggle Stream</button>
+            <button type="button" onclick="refreshCamera('100')">Refresh</button>
+            <button type="button" onclick="startRecording('100')">Start Recording</button>
+            <button type="button" onclick="stopRecording('100')">Stop Recording</button>
+          </div>
+        </div>
+        <div class="camera-container" data-id="101">
+          <h3>Junarata</h3>
+          <div class="camera-stream">
+            <img id="cameraStream101" src="/camera/101/stream" alt="Backyard Camera Stream">
+          </div>
+          <div class="camera-controls">
+            <button type="button" onclick="toggleCamera('101')">Toggle Stream</button>
+            <button type="button" onclick="refreshCamera('101')">Refresh</button>
+            <button type="button" onclick="startRecording('101')">Start Recording</button>
+            <button type="button" onclick="stopRecording('101')">Stop Recording</button>
+          </div>
+        </div>
+        <div class="camera-container" data-id="102">
+          <h3>Verstas</h3>
+          <div class="camera-stream">
+            <img id="cameraStream102" src="/camera/102/stream" alt="Garage Camera Stream">
+          </div>
+          <div class="camera-controls">
+            <button type="button" onclick="toggleCamera('102')">Toggle Stream</button>
+            <button type="button" onclick="refreshCamera('102')">Refresh</button>
+            <button type="button" onclick="startRecording('102')">Start Recording</button>
+            <button type="button" onclick="stopRecording('102')">Stop Recording</button>
+          </div>
+        </div>
+        <!-- Recent motion recordings -->
+        <section id="recordings-section">
+          <h3>Recent Motion Recordings</h3>
+          <div id="recordingsRoot">Loading recordings...</div>
+        </section>
+      </section>
+    </div>
+  </div>
+
+    <!-- Settings Tab -->
+    <div id="settings-tab" class="tab-pane">
+      <h2>Settings</h2>
+
+      <h3>Cronjob / Interval Settings</h3>
+      <form id="settingsForm">
+        <label>Watchdog Interval (seconds):</label>
+        <input type="number" id="watchdogInterval" name="watchdogInterval" min="5" required><br>
+
+        <label>Energy Price Fetch Interval (minutes):</label>
+        <input type="number" id="priceFetchInterval" name="priceFetchInterval" min="1" required><br>
+
+        <label>
+          <input type="checkbox" id="motionRecordingEnabled" name="motionRecordingEnabled">
+          Enable motion-triggered recordings for cameras
+        </label>
+
+        <label>
+          <input type="checkbox" id="audioRecordingEnabled" name="audioRecordingEnabled">
+          Enable audio recording for cameras (microphones and two-way audio)
+        </label>
+
+        <button type="submit">Save Settings</button>
+      </form>
+
+      <h3>Display Time Zone</h3>
+      <label>
+        Time Zone:
+        <select id="timezoneSelect">
+          <option value="Europe/Amsterdam">Europe/Amsterdam</option>
+          <option value="Europe/Andorra">Europe/Andorra</option>
+          <option value="Europe/Athens">Europe/Athens</option>
+          <option value="Europe/Belgrade">Europe/Belgrade</option>
+          <option value="Europe/Berlin">Europe/Berlin</option>
+          <option value="Europe/Bratislava">Europe/Bratislava</option>
+          <option value="Europe/Brussels">Europe/Brussels</option>
+          <option value="Europe/Bucharest">Europe/Bucharest</option>
+          <option value="Europe/Budapest">Europe/Budapest</option>
+          <option value="Europe/Chisinau">Europe/Chisinau</option>
+          <option value="Europe/Copenhagen">Europe/Copenhagen</option>
+          <option value="Europe/Dublin">Europe/Dublin</option>
+          <option value="Europe/Gibraltar">Europe/Gibraltar</option>
+          <option value="Europe/Guernsey">Europe/Guernsey</option>
+          <option value="Europe/Helsinki">Europe/Helsinki</option>
+          <option value="Europe/Isle_of_Man">Europe/Isle_of_Man</option>
+          <option value="Europe/Istanbul">Europe/Istanbul</option>
+          <option value="Europe/Jersey">Europe/Jersey</option>
+          <option value="Europe/Kaliningrad">Europe/Kaliningrad</option>
+          <option value="Europe/Kiev">Europe/Kiev</option>
+          <option value="Europe/Kyiv">Europe/Kyiv</option>
+          <option value="Europe/Lisbon">Europe/Lisbon</option>
+          <option value="Europe/Ljubljana">Europe/Ljubljana</option>
+          <option value="Europe/London">Europe/London</option>
+          <option value="Europe/Luxembourg">Europe/Luxembourg</option>
+          <option value="Europe/Madrid">Europe/Madrid</option>
+          <option value="Europe/Malta">Europe/Malta</option>
+          <option value="Europe/Minsk">Europe/Minsk</option>
+          <option value="Europe/Monaco">Europe/Monaco</option>
+          <option value="Europe/Moscow">Europe/Moscow</option>
+          <option value="Europe/Oslo">Europe/Oslo</option>
+          <option value="Europe/Paris">Europe/Paris</option>
+          <option value="Europe/Prague">Europe/Prague</option>
+          <option value="Europe/Riga">Europe/Riga</option>
+          <option value="Europe/Rome">Europe/Rome</option>
+          <option value="Europe/Sarajevo">Europe/Sarajevo</option>
+          <option value="Europe/Simferopol">Europe/Simferopol</option>
+          <option value="Europe/Sofia">Europe/Sofia</option>
+          <option value="Europe/Stockholm">Europe/Stockholm</option>
+          <option value="Europe/Tallinn">Europe/Tallinn</option>
+          <option value="Europe/Tirane">Europe/Tirane</option>
+          <option value="Europe/Vienna">Europe/Vienna</option>
+          <option value="Europe/Vilnius">Europe/Vilnius</option>
+          <option value="Europe/Warsaw">Europe/Warsaw</option>
+          <option value="Europe/Zagreb">Europe/Zagreb</option>
+          <option value="Europe/Zurich">Europe/Zurich</option>
+        </select>
+      </label>
+
+      <label>
+        Locale:
+        <select id="localeSelect">
+          <option value="en-US">English (US)</option>
+          <option value="en-GB">English (UK)</option>
+          <option value="fi-FI">Finnish</option>
+          <option value="sv-SE">Swedish</option>
+          <option value="no-NO">Norwegian</option>
+          <option value="da-DK">Danish</option>
+          <option value="de-DE">German</option>
+          <option value="fr-FR">French</option>
+          <option value="es-ES">Spanish</option>
+          <option value="it-IT">Italian</option>
+          <option value="nl-NL">Dutch</option>
+          <option value="pt-PT">Portuguese</option>
+          <option value="ru-RU">Russian</option>
+          <option value="pl-PL">Polish</option>
+          <option value="cs-CZ">Czech</option>
+          <option value="sk-SK">Slovak</option>
+          <option value="hu-HU">Hungarian</option>
+          <option value="et-EE">Estonian</option>
+          <option value="lv-LV">Latvian</option>
+          <option value="lt-LT">Lithuanian</option>
+        </select>
+      </label>
+
+      <label>
+        Time Format:
+        <select id="timeFormatSelect">
+          <option value="24h">24-hour</option>
+          <option value="12h">12-hour</option>
+        </select>
+      </label>
+
+      <div id="camera-motion-settings">
+        <h3>Camera Motion Sensitivity</h3>
+        <label>
+          Global Motion Sensitivity (0-100 or 0-1):
+          <input type="number" id="globalMotionSensitivity" min="0" max="100" step="0.01" placeholder="e.g. 15 or 0.15">
+        </label>
+        <p class="help">Set a global default threshold. Per-camera overrides can be set per-device below or in the camera configuration.</p>
+
+        <h3>Object Detection Filtering</h3>
+        <label>
+          Global Object Types (comma-separated):
+          <input type="text" id="globalObjectTypes" placeholder="e.g. person,vehicle,animal">
+        </label>
+        <p class="help">Only trigger motion recordings for these detected object types. Leave empty to detect all motion.</p>
+
+        <div id="cameraSettingsRoot">
+          <!-- Per-camera sensitivity and object type controls will be injected here by the UI -->
+        </div>
+        <button type="button" id="saveCameraSettings">Save Camera Settings</button>
+      </div>
+
+      <hr>
+
+      <h3>Add New Shelly Switch</h3>
+      <form id="addShellyForm">
+        <label>Shelly Name:</label>
+        <input type="text" id="shellyName" name="shellyName" required><br>
+
+        <label>Shelly Description:</label>
+        <input type="text" id="shellyDescription" name="shellyDescription" placeholder="Optional longer description"><br>
+
+        <label>Shelly IP:</label>
+        <input type="text" id="shellyIP" name="shellyIP" required><br>
+
+        <button type="submit">Add Shelly</button>
+      </form>
+
+      <h3>Existing Shelly Devices</h3>
+      <div id="devicesList">Loading devices...</div>
+    </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="tabs.js"></script>
+  <!-- Modular application scripts -->
+  <script src="js/settings.js"></script>
+  <script src="js/chart.js"></script>
+  <script src="js/deviceControl.js"></script>
+  <script src="js/ui.js"></script>
+  <!-- FLV.js for HTTP-FLV playback in browsers -->
+  <script src="https://cdn.jsdelivr.net/npm/flv.js/dist/flv.min.js"></script>
+  <script src="cameraController.js"></script>
+  <script src="settingsScript.js"></script>
+</body>
+</html>

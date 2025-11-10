@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/home/home-control-center/logs/.352b9f0e4bc26178987b35292471da4e6fe532f0-audit.json",
+    "files": [
+        {
+            "date": 1762767698861,
+            "name": "/home/home-control-center/logs/app-2025-11-10.log",
+            "hash": "6be5ceedffab04e6abdddb34fec70ec0a9927aabb2c85432a8cc7e6dba4d0b87"
+        }
+    ],
+    "hashType": "sha256"
+}

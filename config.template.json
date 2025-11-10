@@ -1,0 +1,27 @@
+{
+  "SERVER_IP": "192.168.1.10",
+  "SERVER_PORT": 3000,
+  "TELEGRAM_BOT_TOKEN": "", 
+  "TELEGRAM_CHAT_ID": "",
+  "shellyDevices": {
+    "1": "192.168.1.236",
+    "2": "192.168.1.232",
+    "3": "192.168.1.75"
+  },
+  "videoCameras": {
+    "100": {
+      "name": "Etupiha",
+      "streamUrl": "http://<CAM_HOST>/flv?stream=channel0_main.bcs&user=<USER>&password=<PASSWORD>",
+      "type": "flv",
+      "motionRecordDuration": 30,
+      "motionSensitivity": 0.25
+    },
+    "101": {
+      "name": "Backyard Camera",
+      "streamUrl": "http://<CAM_HOST>/flv?stream=channel0_main.bcs&user=<USER>&password=<PASSWORD>",
+      "type": "flv"
+    }
+  }
+  ,
+  "motionSensitivityDefault": 0.15
+}

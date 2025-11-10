@@ -1,0 +1,31 @@
+logLevel: info
+
+# WebRTC server settings
+webrtc: yes
+webrtcAddress: :8889
+webrtcEncryption: no
+webrtcAllowOrigin: '*'
+webrtcLocalUDPAddress: :8189
+webrtcIPsFromInterfaces: yes
+webrtcAdditionalHosts:
+  - "192.168.1.10"
+# STUN server to help ICE candidates for clients behind NAT
+webrtcICEServers:
+  - "stun:stun.l.google.com:19302"
+
+# RTSP server enabled so MediaMTX can talk RTSP to sources
+rtsp: yes
+rtspAddress: :8554
+rtpAddress: :8000
+rtcpAddress: :8001
+
+# Define paths (streams)
+paths:
+  # expose the camera as "camera100"
+  camera100:
+    # replace with your camera RTSP URL (already filled from config.js)
+    source: "rtsp://<user>:<password>@192.168.1.13:554"
+    # pull the source immediately when server starts (set to 'yes' if you prefer)
+    sourceOnDemand: no
+    # allow unlimited readers
+    maxReaders: 0

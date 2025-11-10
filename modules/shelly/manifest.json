@@ -1,0 +1,7 @@
+{
+  "id": "shelly",
+  "displayName": "Shelly Control",
+  "mountPath": "/",
+  "tabPath": "/shelly-control",
+  "order": 10
+}

@@ -1,0 +1,7 @@
+{
+  "id": "cameras",
+  "displayName": "Video Surveillance",
+  "mountPath": "/",
+  "tabPath": "/video-surveillance",
+  "order": 20
+}

@@ -1,0 +1,12 @@
+config.json
+node_modules/
+.env
+package-lock.json
+.vscode/
+*.code-workspace
+*.log
+recordings/
+logger.js
+logger.pid
+shelly_logger.txt
+mediamtx.yml
